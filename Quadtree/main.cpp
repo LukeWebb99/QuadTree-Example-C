@@ -7,12 +7,14 @@ int main()
 {
     srand(time(0));
 
-    std::vector<Point*> particles;
+    const int windowWidth = 600;
+    const int windowHeight = 600;
 
-    Rectangle* boundary = new Rectangle(400, 400, 400, 400);
+    std::vector<Point*> particles;
+    Rectangle* boundary = new Rectangle(windowWidth, windowHeight, windowWidth, windowHeight);
     
     for (size_t i = 0; i < 600; i++) {
-        Point* p = new Point(rand() % 400, rand() % 400, 4);
+        Point* p = new Point(rand() % windowWidth, rand() % windowHeight, 4);
         particles.push_back(p);
        
     }
@@ -20,9 +22,10 @@ int main()
     std::vector<Point*> inRange;
     bool toggle = false;
 
-    std::cout << "Right mouse to enable & Left mouse to disable\n";
+    std::cout << "Hold Mouse 1 or Toggle with A \n";
 
-    sf::RenderWindow window(sf::VideoMode(400, 400), "Quadtree");
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Quadtree");
+    window.setKeyRepeatEnabled(false);
     while (window.isOpen())
     {
         sf::Event event;
@@ -31,17 +34,19 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            
+            if (event.key.code == sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                toggle = !toggle;
 
-            if (event.type == sf::Event::MouseButtonPressed) {
-                if (event.mouseButton.button == sf::Mouse::Right && !toggle) {
-                    std::cout << "Quadtree enabled\n";
-                    toggle = true;
-                } else if (event.mouseButton.button == sf::Mouse::Left && toggle) {
-                    std::cout << "Quadtree disabled\n";
-                    toggle = false;
-                }
+                if (toggle)
+                    std::cout << "Optimized Collision Enabled\n";
+                else
+                    std::cout << "Optimized Collision Disabled\n";
             }
+
         }
+
+
 
         QuadTree* qt = new QuadTree(boundary, 4);
 
